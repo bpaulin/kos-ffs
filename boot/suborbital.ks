@@ -2,7 +2,7 @@ if ship:status = "prelaunch" {
   switch to archive.
 
   list files in scripts.
-  for file in list("lib_ui", "mission_suborbital") {
+  for file in list("lib_ui", "mission_suborbital", "ascent", "descent") {
     copypath(file, core:volume).
   }
 }
