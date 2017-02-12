@@ -18,3 +18,11 @@ function uiDebug {
   uiConsole("Debug", msg).
   hudtext(msg, 1, 3, 24, WHITE, false).
 }
+
+function uiWarning {
+  parameter prefix.
+  parameter msg.
+
+  uiConsole(prefix, msg).
+  hudtext(msg, 10, 4, 36, YELLOW, false).
+}

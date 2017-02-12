@@ -39,6 +39,9 @@ function ascentThrottle {
 ////////////////////////////////////////////////////////////////////////////////
 function ascentSteering {
   set gtPct to (altitude - launch_gt0) / (launch_gt1 - launch_gt0).
+  if gtPct<0 {
+    return heading(90,90).
+  }
   set pda to (cos(gtPct * 180) + 1) / 2.
   set theta to 90 * ( pda - 1 ).
   return up + R(0, theta, -180).

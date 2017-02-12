@@ -11,12 +11,17 @@ if (ship:status = "flying" or ship:status = "sub_orbital") {
   uiBanner("Mission", "Ascent.").
   run ascent(80,1).
 
-  uiBanner("Mission", "Waiting for apoapsis.").
-  wait until verticalspeed<0.
+  if apoapsis>body:atm:height {
+    uiBanner("Mission", "Circularize.").
+    wait until altitude>body:atm:height.
+    run Circularize.
+  }
+  wait 1.
 
-  uiBanner("Mission", "Descent.").
-  run descent(0).
-
-  wait until ship:status="landed" or ship:status="splashed".
+  if periapsis<body:atm:height {
+    uiBanner("Mission", "Descent.").
+    run descent(0).
+  } else {
   uiBanner("Mission", "Success!").
+  }
 }
