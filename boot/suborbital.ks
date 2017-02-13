@@ -1,3 +1,5 @@
+CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
+
 if ship:status = "prelaunch" {
   switch to archive.
 
@@ -7,9 +9,29 @@ if ship:status = "prelaunch" {
       copypath(file, core:volume).
     }
   }
+
+  switch to core:volume.
+  wait 2.
+  sas on.
 }
 
-switch to core:volume.
-wait 2.
+run once lib_ui.
 
-run mission_suborbital.
+if ship:status = "prelaunch" {
+  uiBanner("Mission", "Launch!").
+  stage.
+  wait 2.
+}
+
+if (ship:status = "flying" or ship:status = "sub_orbital") {
+  uiBanner("Mission", "Ascent.").
+  run ascent(80,1).
+
+  uiBanner("Mission", "Waiting for apoapsis.").
+  wait until verticalspeed<0.
+
+  uiBanner("Mission", "Descent.").
+  run descent(0).
+
+  uiBanner("Mission", "Success!").
+}

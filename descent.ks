@@ -14,5 +14,8 @@ lock steering to retrograde.
 uiBanner("Mission", "Prepare Chutes.").
 when (not chutessafe) then {
   chutessafe on.
+  unlock steering.
   return (not chutes).
 }
+
+wait until ship:status="landed" or ship:status="splashed".
