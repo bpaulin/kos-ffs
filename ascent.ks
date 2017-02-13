@@ -23,12 +23,14 @@ function ascentStaging {
         SET numOut TO numOut + 1.
       }
     }
-    if numOut > 0 { stage. }.
+    if numOut > 0 {
+      stage.
+    }
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Auto-stage logic
+// Auto-throttle logic
 ////////////////////////////////////////////////////////////////////////////////
 function ascentThrottle {
   return 1.
@@ -41,6 +43,8 @@ function ascentSteering {
   set gtPct to (altitude - launch_gt0) / (launch_gt1 - launch_gt0).
   if gtPct<0 {
     return heading(90,90).
+  } else if gtPct>1 {
+    return heading(90,0).
   }
   set pda to (cos(gtPct * 180) + 1) / 2.
   set theta to 90 * ( pda - 1 ).
@@ -56,9 +60,6 @@ lock throttle to ascentThrottle().
 until apoapsis>wantedApoapsis{
   ascentStaging().
   wait 0.2.
-  if maxthrust<=0 {
-    break.
-  }
 }
 lock throttle to 0.
 sas on.

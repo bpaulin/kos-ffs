@@ -9,6 +9,10 @@ until stage:number = maxStage {
   stage.
 }
 
+set warp to 3.
+wait until altitude<body:atm:height.
+set warp to 0.
+
 lock steering to retrograde.
 
 uiBanner("Mission", "Prepare Chutes.").

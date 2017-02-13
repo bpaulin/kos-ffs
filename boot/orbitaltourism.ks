@@ -26,32 +26,18 @@ if ship:status = "prelaunch" {
 if (ship:status = "flying" or ship:status = "sub_orbital") {
   uiBanner("Mission", "Ascent.").
   run ascent(80,2).
-  
+
   wait 1.
   until stage:number=2 {
     stage.
   }
 
-  set failed to false.
   if apoapsis>body:atm:height {
     uiBanner("Mission", "Circularize.").
     wait until altitude>body:atm:height.
     run Circularize.
-    if periapsis<body:atm:height {
-      set failed to true.
-    }
-  }
-  else {
-    set failed to true.
   }
 
-  if failed {
-    uiBanner("Mission", "failed, re-enter.").
-    run reenter(45,0).
-  }
-  else {
-    uiBanner("Mission", "Success!").
-  }
-
+  run reenter(45,0).
 }
 set pilotmainthrottle to 0.

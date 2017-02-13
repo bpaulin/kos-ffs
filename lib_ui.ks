@@ -1,5 +1,3 @@
-clearscreen.
-
 function uiConsole {
   parameter prefix.
   parameter msg.

@@ -8,4 +8,4 @@ run once lib_ui.
 
 run node.
 
-uiBanner("Circ", "Circularized; e=" + round(ship:obt:eccentricity, 3)).
+uiBanner("Circularized", "e:" + round(ship:obt:eccentricity, 3) + ", i:" + round(ship:obt:inclination, 3)).
