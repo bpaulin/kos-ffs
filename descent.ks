@@ -42,4 +42,5 @@ when (not chutessafe) then {
 // landed!
 ////////////////////////////////////////////////////////////////////////////////
 wait until ship:status="landed" or ship:status="splashed".
+set warp to 0.
 sas off.

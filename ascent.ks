@@ -12,6 +12,7 @@ global launch_gt1 is 45000.
 function ascentStaging {
   if stage:number > maxStage {
     if maxthrust = 0 {
+      detailMessage("Ascent", "no thrust, stage #" + stage:number).
       stage.
     }
     SET numOut to 0.
@@ -24,6 +25,7 @@ function ascentStaging {
       }
     }
     if numOut > 0 {
+      detailMessage("Ascent", "flameout, stage #" + stage:number).
       stage.
     }
   }
@@ -61,5 +63,10 @@ until apoapsis>wantedApoapsis{
   ascentStaging().
   wait 0.2.
 }
+detailMessage("Ascent", "apoapsis ok, release throttle").
 lock throttle to 0.
+if apoapsis>body:atm:height {
+  wait until altitude>body:atm:height.
+}
+detailMessage("Ascent", "out of atm").
 sas on.

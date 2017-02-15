@@ -23,7 +23,7 @@ else {
   for eng in my_engines {
     set eIsp to eIsp + eng:maxthrust / maxthrust * eng:isp.
   }
-  set surfaceGravity to ship:body:mu / ship:body:radius^2.
+  set surfaceGravity to kerbin:mu / ship:kerbin^2.
   set ve to eIsp * surfaceGravity.
   set mfr to ship:maxthrust/ve.
 
@@ -48,12 +48,15 @@ else {
   ////////////////////////////////////////////////////////////////////////////////
   // Burn !!
   ////////////////////////////////////////////////////////////////////////////////
+  local original is nd:deltaV.
   wait until time:seconds >= start_time.
   detailMessage("Node", "begin burn").
-  lock throttle to 1.
-  wait until nd:deltav:mag<10.
-  until nd:deltav:mag<0.1 {
-    lock throttle to nd:deltav:mag/10.
+  until (nd:deltaV:mag<0.1 or vdot(original, nd:deltaV)<0) {
+    lock throttle to 1.
+    wait until nd:deltav:mag<10.
+    until nd:deltav:mag<0.1 {
+      lock throttle to nd:deltav:mag/10.
+    }
   }
   lock throttle to 0.
   detailMessage("Node", "end burn").

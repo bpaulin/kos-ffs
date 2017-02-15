@@ -1,4 +1,8 @@
-declare global verbose is 1.
+declare global verboseMission is 0.
+declare global verboseDetails is 1.
+declare global verboseDebug is 2.
+
+declare global verbose is verboseDetails.
 
 function errorMessage {
   parameter msg.

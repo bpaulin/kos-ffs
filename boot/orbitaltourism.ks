@@ -3,7 +3,7 @@ switch to archive.
 
 run once lib_message.
 
-set verbose to 1.
+set verbose to verboseMission.
 
 local stageMaxAscent is 2.
 local stageMinCircularize is 2.
@@ -28,18 +28,15 @@ if (ship:status = "flying" or ship:status = "sub_orbital") {
   until stage:number=stageMinCircularize {
     stage.
   }
+  missionMessage("Circularize.").
+  run Circularize.
 
-  if apoapsis>body:atm:height {
-    wait until altitude>body:atm:height.
-    missionMessage("Circularize.").
-    run Circularize.
-  }
   if (ship:status = "orbiting") {
-    missionMessage("Success").
+    missionMessage("In orbit!").
   }
   else {
     errorMessage("Failed").
-    run descent(stageMaxDescent).
+    run descent(stageMaxDescent,maxReenterWarp).
   }
 }
 

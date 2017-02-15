@@ -8,7 +8,7 @@ run once lib_message.
 local canDoTransfer is true.
 function abortTransfer {
   parameter msg.
-  warningMessage("Node", msg).
+  warningMessage(msg).
   set canDoTransfer to false.
 }
 
@@ -31,7 +31,7 @@ if canDoTransfer {
   // orbit radius
   //////////////////////////////////////////////////////////////////////////////
   local r1 is ship:obt:semimajoraxis.
-  local r2 is transferTo:obt:semimajoraxis - transferTo:soiradius/2.1.
+  local r2 is transferTo:obt:semimajoraxis - transferTo:soiradius/3.
 
   //////////////////////////////////////////////////////////////////////////////
   // deltaV
