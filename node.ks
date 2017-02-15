@@ -4,12 +4,12 @@
 // https://ksp-kos.github.io/KOS/tutorials/exenode.html
 ////////////////////////////////////////////////////////////////////////////////
 
-run once lib_ui.
+run once lib_message.
 
 set nd to nextnode.
 
 if maxthrust=0 {
-  uiBanner("Node", "failed: no thrust").
+  detailMessage("Node", "failed: no thrust").
 }
 else {
   ////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ else {
   set start_time TO time:seconds + nd:eta - burn_duration/2.
   set end_time TO time:seconds + nd:eta + burn_duration/2.
 
-  uiBanner("Node", "eta:" + round(nd:eta) + ", dV: " + round(nd:deltav:mag) + ", dT: " + round(burn_duration)).
+  detailMessage("Node", "eta:" + round(nd:eta) + ", dV: " + round(nd:deltav:mag) + ", dT: " + round(burn_duration)).
 
   ////////////////////////////////////////////////////////////////////////////////
   // Point at the the node
@@ -43,17 +43,20 @@ else {
   ////////////////////////////////////////////////////////////////////////////////
   // warp
   ////////////////////////////////////////////////////////////////////////////////
-  set warp to 3.
-  wait until time:seconds >= start_time-60.
-  set warp to 0.
+  warpto(start_time - 30).
 
   ////////////////////////////////////////////////////////////////////////////////
   // Burn !!
   ////////////////////////////////////////////////////////////////////////////////
   wait until time:seconds >= start_time.
+  detailMessage("Node", "begin burn").
   lock throttle to 1.
-  wait until time:seconds >= end_time.
+  wait until nd:deltav:mag<10.
+  until nd:deltav:mag<0.1 {
+    lock throttle to nd:deltav:mag/10.
+  }
   lock throttle to 0.
+  detailMessage("Node", "end burn").
 
   ////////////////////////////////////////////////////////////////////////////////
   // Clean

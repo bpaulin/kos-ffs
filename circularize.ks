@@ -1,4 +1,4 @@
-run once lib_ui.
+run once lib_message.
 
 // if obt:transition = "ESCAPE" or eta:periapsis < eta:apoapsis {
   // run node_apo(obt:periapsis).
@@ -8,4 +8,4 @@ run once lib_ui.
 
 run node.
 
-uiBanner("Circularized", "e:" + round(ship:obt:eccentricity, 3) + ", i:" + round(ship:obt:inclination, 3)).
+detailMessage("Circularized", "e:" + round(ship:obt:eccentricity, 3) + ", i:" + round(ship:obt:inclination, 3)).

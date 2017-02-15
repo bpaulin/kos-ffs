@@ -33,7 +33,7 @@ function ascentStaging {
 // Auto-throttle logic
 ////////////////////////////////////////////////////////////////////////////////
 function ascentThrottle {
-  return 1.
+  return 1. // yes, kerbal way
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,11 +44,11 @@ function ascentSteering {
   if gtPct<0 {
     return heading(90,90).
   } else if gtPct>1 {
-    return heading(90,0).
+    return heading(90,10).
   }
   set pda to (cos(gtPct * 180) + 1) / 2.
-  set theta to 90 * ( pda - 1 ).
-  return up + R(0, theta, -180).
+  set theta to max(-80, 90 * ( pda - 1 )).
+  return heading(90, theta+90).
 }
 
 ////////////////////////////////////////////////////////////////////////////////

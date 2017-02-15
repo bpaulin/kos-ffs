@@ -15,23 +15,23 @@ if ship:status = "prelaunch" {
   sas on.
 }
 
-run once lib_ui.
+run once lib_message.
 
 if ship:status = "prelaunch" {
-  uiBanner("Mission", "Launch!").
+  missionMessage("Launch!").
   stage.
   wait 2.
 }
 
 if (ship:status = "flying" or ship:status = "sub_orbital") {
-  uiBanner("Mission", "Ascent.").
+  missionMessage("Ascent.").
   run ascent(80,1).
 
-  uiBanner("Mission", "Waiting for apoapsis.").
+  missionMessage("Waiting for apoapsis.").
   wait until verticalspeed<0.
 
-  uiBanner("Mission", "Descent.").
+  missionMessage("Descent.").
   run descent(0).
 
-  uiBanner("Mission", "Success!").
+  missionMessage("Success!").
 }

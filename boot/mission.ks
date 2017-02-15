@@ -15,14 +15,14 @@ if ship:status = "prelaunch" {
   sas on.
 }
 
-run once lib_ui.
+run once lib_message.
 
 if ship:status = "prelaunch" {
-  uiBanner("Mission", "Launch!").
+  missionMessage("Launch!").
   stage.
   wait 1.
 }
 
 if (ship:status = "flying" or ship:status = "sub_orbital") {
-  uiBanner("Mission", "Begin.").
+  missionMessage("Begin.").
 }

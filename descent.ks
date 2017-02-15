@@ -1,21 +1,21 @@
 declare parameter maxStage.
 
-run once lib_ui.
+run once lib_message.
 
 sas off.
 
-uiBanner("Mission", "Stage to #" + maxStage).
+detailMessage("Descent", "Stage to #" + maxStage).
 until stage:number = maxStage {
   stage.
 }
 
 set warp to 3.
 wait until altitude<body:atm:height.
-set warp to 0.
+set warp to 3.
 
 lock steering to retrograde.
 
-uiBanner("Mission", "Prepare Chutes.").
+detailMessage("Descent", "Prepare Chutes.").
 when (not chutessafe) then {
   chutessafe on.
   unlock steering.

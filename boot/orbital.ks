@@ -15,26 +15,26 @@ if ship:status = "prelaunch" {
   sas on.
 }
 
-run once lib_ui.
+run once lib_message.
 
 if ship:status = "prelaunch" {
-  uiBanner("Mission", "Launch!").
+  missionMessage("Launch!").
   stage.
   wait 2.
 }
 
 if (ship:status = "flying" or ship:status = "sub_orbital") {
-  uiBanner("Mission", "Ascent.").
+  missionMessage("Ascent.").
   run ascent(80,2).
-  
+
   wait 1.
-  until stage:number=2 {
-    stage.
-  }
+  // until stage:number=2 {
+  //   stage.
+  // }
 
   set failed to false.
   if apoapsis>body:atm:height {
-    uiBanner("Mission", "Circularize.").
+    missionMessage("Circularize.").
     wait until altitude>body:atm:height.
     run Circularize.
     if periapsis<body:atm:height {
@@ -46,11 +46,11 @@ if (ship:status = "flying" or ship:status = "sub_orbital") {
   }
 
   if failed {
-    uiBanner("Mission", "failed, re-enter.").
+    missionMessage("failed, re-enter.").
     run reenter(45,0).
   }
   else {
-    uiBanner("Mission", "Success!").
+    missionMessage("Success!").
   }
 
 }
