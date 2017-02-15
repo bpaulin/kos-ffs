@@ -3,7 +3,7 @@ switch to archive.
 
 run once lib_message.
 
-set verbose to 0.
+set verbose to 1.
 
 local stageMaxAscent is 2.
 local stageMinCircularize is 2.
@@ -11,6 +11,8 @@ local stageMaxDescent is 0.
 
 local altitudeWanted is 75.
 local altitudeReEnter is 25.
+
+local maxReenterWarp is 3.
 
 if ship:status = "prelaunch" {
   missionMessage("Launch!").
@@ -43,7 +45,7 @@ if (ship:status = "flying" or ship:status = "sub_orbital") {
 
 if (ship:status = "orbiting") {
   missionMessage("Re-enter").
-  run reenter(altitudeReEnter,stageMaxDescent).
+  run reenter(altitudeReEnter,stageMaxDescent,maxReenterWarp).
 }
 
 if (ship:status="landed" or ship:status="splashed") {
