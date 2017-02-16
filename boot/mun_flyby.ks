@@ -1,23 +1,26 @@
 CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
 wait 2.
+until not hasnode { remove nextnode. }.
 switch to archive.
 
 run once lib_message.
 run once lib_math.
 run once lib_io.
+run once lib_utils.
 
 set verbose to verboseDebug.
 
 local stageMaxAscent is 2.
 local stageMinCircularize is 4.
-local stageMaxDescent is 0.
 local stageMinTransfer is 2.
+local stageMaxDescent is 0.
 
 local altitudeWanted is 75.
 local altitudeReEnter is 45.
 
+local maxReenterWarp is 3.
+
 local missionGoal is body("Mun").
-local missionSuccess is false.
 
 set steeringmanager:pitchts to 5.
 set steeringmanager:yawts to 5.
@@ -31,8 +34,9 @@ if nextstep="prelaunch" {
   missionMessage("Launch!").
   stage.
   wait 1.
+
   missionMessage("Orbiting").
-  run launch_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
+  run exe_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
 
   if (ship:status = "orbiting") {
     missionMessage("In orbit!").
@@ -41,7 +45,7 @@ if nextstep="prelaunch" {
   }
   else {
     errorMessage("Failed").
-    run descent(stageMaxDescent,3).
+    run exe_descent(stageMaxDescent,3).
   }
 }
 
@@ -49,11 +53,11 @@ if nextstep="prelaunch" {
 // orbit -> transfer
 ////////////////////////////////////////////////////////////////////////////////
 if nextStep="transfer" {
-  run stageTo(stageMinTransfer).
+  dropStageTo(stageMinTransfer).
   wait 1.
 
   missionMessage("Transfer to " + missionGoal:name).
-  run transfer(missionGoal).
+  run exe_transfer(missionGoal).
 
   setNextStep("encounter").
 }
@@ -82,7 +86,6 @@ if nextStep="escape" {
   warpto(time:seconds + ship:orbit:nextpatcheta).
   wait until ship:body=Kerbin.
   wait 2.
-  set missionSuccess to true.
   setNextStep("return").
 }
 
@@ -90,19 +93,14 @@ if nextStep="escape" {
 // escape -> return
 ////////////////////////////////////////////////////////////////////////////////
 if nextStep="return" {
-  missionMessage("Adjust periapsis").
-  run node_peri_delay(80,60).
-  run node.
-
   missionMessage("Decrease velocity").
-  run return(80,45,stageDeltaV()).
+  run exe_return(altitudeWanted,altitudeReEnter,stageDeltaV()).
 
   missionMessage("Descent").
-  run descent(stageMaxDescent).
+  run exe_descent(stageMaxDescent, maxReenterWarp).
 
   missionMessage(ship:status).
-  sas on.
-  set pilotmainthrottle to 0.
+  set nextStep to "done".
   setNextStep("done").
 }
 
@@ -113,3 +111,6 @@ if nextStep<>"done" {
   wait 5.
   reboot.
 }
+
+sas on.
+set pilotmainthrottle to 0.

@@ -2,6 +2,9 @@
 // deltaV for the current stage
 ////////////////////////////////////////////////////////////////////////////////
 function stageDeltaV {
+  if maxthrust=0 {
+    return 0.
+  }
   list engines in my_engines.
   local eisp is 0.
   for eng in my_engines {

@@ -1,37 +1,29 @@
 CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
-
-if ship:status = "prelaunch" {
-  switch to archive.
-
-  list files in scripts.
-  for file in scripts {
-    if file:name:endswith(".ks") {
-      copypath(file, core:volume).
-    }
-  }
-
-  switch to core:volume.
-  wait 2.
-  sas on.
-}
+wait 2.
+switch to archive.
 
 run once lib_message.
+run once lib_math.
+run once lib_io.
+run once lib_utils.
 
-if ship:status = "prelaunch" {
-  missionMessage("Launch!").
-  stage.
-  wait 2.
-}
+local stageMaxAscent is 1.
+local stageMaxDescent is 0.
+local altitudeWanted is 75.
 
-if (ship:status = "flying" or ship:status = "sub_orbital") {
-  missionMessage("Ascent.").
-  run ascent(80,1).
+missionMessage("Launch!").
+stage.
+wait 2.
 
-  missionMessage("Waiting for apoapsis.").
-  wait until verticalspeed<0.
+missionMessage("Ascent.").
+run ascent(altitudeWanted,stageMaxAscent).
 
-  missionMessage("Descent.").
-  run descent(0).
+missionMessage("Waiting for apoapsis.").
+wait until verticalspeed<0.
+missionMessage("Descent.").
 
-  missionMessage("Success!").
-}
+run descent(stageMaxDescent).
+missionMessage("Success!").
+
+sas on.
+set pilotmainthrottle to 0.

@@ -22,7 +22,7 @@ switch to archive.
 
 list files in scripts.
 for file in scripts {
-  if file:name:endswith(".ks") {
+  if file:name:endswith(".ks") and not file:name:startswith("test") {
     compile file:name.
     local compiled is open(file:name:replace(".ks", ".ksm")).
     local copySize is min(file:size, compiled:size).

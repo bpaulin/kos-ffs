@@ -50,9 +50,9 @@ else {
   ////////////////////////////////////////////////////////////////////////////////
   // Burn !!
   ////////////////////////////////////////////////////////////////////////////////
+  wait until time:seconds >= start_time.
   local original is nd:deltaV.
   local lastMag is 10000.
-  wait until time:seconds >= start_time.
   detailMessage("Node", "end warp").
   detailMessage("Node", "begin burn").
   until abs(nd:deltaV:mag)<0.1 or abs(nd:deltaV:mag)>abs(lastMag) {
@@ -63,9 +63,10 @@ else {
       lock throttle to 1.
     }
     set lastMag to nd:deltaV:mag.
+    wait 0.1.
   }
   lock throttle to 0.
-  detailMessage("Node", "end burn").
+  detailMessage("Node", "end burn, error:"+round(nd:deltaV:mag,2)+"m/s").
 
   ////////////////////////////////////////////////////////////////////////////////
   // Clean

@@ -7,6 +7,7 @@ declare parameter maxStage.
 declare parameter maxWarp is 0.
 
 run once lib_message.
+run once lib_math.
 
 sas off.
 
@@ -15,7 +16,9 @@ sas off.
 ////////////////////////////////////////////////////////////////////////////////
 detailMessage("Descent", "Stage to #" + maxStage).
 until stage:number = maxStage {
+  // detailMessage("Descent", stageDeltaV+" m/s left in stage #" + maxStage).
   stage.
+  wait 1.
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -8,7 +8,7 @@ declare parameter maxStage.
 declare parameter maxWarp is 0.
 
 run once lib_message.
-
+print wantedPeriapsisKm.
 set wantedPeriapsis to wantedPeriapsisKm*1000.
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -17,11 +17,11 @@ set wantedPeriapsis to wantedPeriapsisKm*1000.
 detailMessage("Re-enter", "Decrease Periapsis to " + wantedPeriapsis).
 if periapsis>wantedPeriapsis {
   run node_peri(wantedPeriapsis).
-  run node.
+  run exe_node.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Launch descent
 ////////////////////////////////////////////////////////////////////////////////
 detailMessage("Re-enter", "Descent.").
-run descent(maxStage, maxWarp).
+run exe_descent(maxStage, maxWarp).

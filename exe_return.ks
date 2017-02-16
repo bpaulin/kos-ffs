@@ -99,7 +99,7 @@ debugMessage("velocity at periapsis is " + round(Vperi) + " m/s").
 ////////////////////////////////////////////////////////////////////////////////
 local nd1 is node(time:seconds + eta:periapsis, 0, 0, dv1).
 add nd1.
-run node.
+run exe_node.
 local nd2 is node(time:seconds + min(eta:apoapsis, eta:periapsis), 0, 0, dv2).
 add nd2.
-run node.
+run exe_node.

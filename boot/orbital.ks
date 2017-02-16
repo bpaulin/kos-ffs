@@ -3,6 +3,10 @@ wait 2.
 switch to archive.
 
 run once lib_message.
+run once lib_math.
+run once lib_io.
+run once lib_utils.
+
 set verbose to verboseDebug.
 
 local stageMaxAscent is 2.
@@ -10,25 +14,37 @@ local stageMinCircularize is 4.
 local stageMaxDescent is 0.
 local altitudeWanted is 75.
 
-if ship:status = "prelaunch" {
-  missionMessage("Launch!").
-  set steeringmanager:pitchts to 5.
-  set steeringmanager:yawts to 5.
-  stage.
-  wait 2.
-}
+local nextStep is getNextStep().
 
-if (ship:status = "flying" or ship:status = "sub_orbital") {
+////////////////////////////////////////////////////////////////////////////////
+// Prelaunch -> orbit
+////////////////////////////////////////////////////////////////////////////////
+if nextstep="prelaunch" {
+  missionMessage("Launch!").
+  stage.
+  wait 1.
+
   missionMessage("Orbiting").
-  run launch_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
+  run exe_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
 
   if (ship:status = "orbiting") {
     missionMessage("In orbit!").
+    panels on.
+    setNextStep("done").
   }
   else {
     errorMessage("Failed").
-    run descent(stageMaxDescent,3).
+    run exe_descent(stageMaxDescent,3).
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// reboot
+////////////////////////////////////////////////////////////////////////////////
+if nextStep<>"done" {
+  wait 5.
+  reboot.
+}
+
+sas on.
 set pilotmainthrottle to 0.
