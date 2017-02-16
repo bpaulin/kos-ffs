@@ -31,7 +31,6 @@ or (nd:orbit:periapsis<wantedPeriapsis and not raising) {
   set minDv to maxDv.
   set maxDv to maxDv*2.
   set nd:prograde to burnDirection*maxDv.
-  debugMessage("min:"+minDV+", max:"+maxDV).
 }
 
 //
@@ -47,7 +46,6 @@ until maxDV-minDV<0.01 {
     else {
       set minDV to meanDV.
     }
-    debugMessage("mean:"+meanDV).
 }
 
 //

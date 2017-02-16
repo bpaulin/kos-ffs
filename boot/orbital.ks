@@ -1,57 +1,34 @@
 CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
-
-if ship:status = "prelaunch" {
-  switch to archive.
-
-  list files in scripts.
-  for file in scripts {
-    if file:name:endswith(".ks") {
-      copypath(file, core:volume).
-    }
-  }
-
-  switch to core:volume.
-  wait 2.
-  sas on.
-}
+wait 2.
+switch to archive.
 
 run once lib_message.
+set verbose to verboseDebug.
+
+local stageMaxAscent is 2.
+local stageMinCircularize is 4.
+local stageMaxDescent is 0.
+local altitudeWanted is 75.
 
 if ship:status = "prelaunch" {
   missionMessage("Launch!").
+  set steeringmanager:pitchts to 5.
+  set steeringmanager:yawts to 5.
   stage.
   wait 2.
 }
 
 if (ship:status = "flying" or ship:status = "sub_orbital") {
-  missionMessage("Ascent.").
-  run ascent(80,2).
+  missionMessage("Orbiting").
+  run launch_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
 
-  wait 1.
-  // until stage:number=2 {
-  //   stage.
-  // }
-
-  set failed to false.
-  if apoapsis>body:atm:height {
-    missionMessage("Circularize.").
-    wait until altitude>body:atm:height.
-    run Circularize.
-    if periapsis<body:atm:height {
-      set failed to true.
-    }
+  if (ship:status = "orbiting") {
+    missionMessage("In orbit!").
   }
   else {
-    set failed to true.
+    errorMessage("Failed").
+    run descent(stageMaxDescent,3).
   }
-
-  if failed {
-    missionMessage("failed, re-enter.").
-    run reenter(45,0).
-  }
-  else {
-    missionMessage("Success!").
-  }
-
 }
+
 set pilotmainthrottle to 0.

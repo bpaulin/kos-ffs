@@ -1,18 +1,7 @@
 CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
 
 if ship:status = "prelaunch" {
-  switch to archive.
-
-  list files in scripts.
-  for file in scripts {
-    if file:name:endswith(".ks") {
-      copypath(file, core:volume).
-    }
-  }
-
-  switch to core:volume.
-  wait 2.
-  sas on.
+  runpath("0:/ksc/deploy", true, false).
 }
 
 run once lib_message.

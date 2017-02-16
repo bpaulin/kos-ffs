@@ -1,2 +1,2 @@
-test.ks
-
+test*.ks
+**/*.ksm

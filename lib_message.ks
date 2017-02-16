@@ -12,7 +12,7 @@ function errorMessage {
 
 function missionMessage {
   parameter msg.
-  print "T+" + round(missiontime) + " " + msg.
+  print "*** T+" + round(missiontime) + " " + msg.
   hudtext(msg, 10, 4, 24, GREEN, false).
 }
 

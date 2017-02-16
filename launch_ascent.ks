@@ -1,35 +1,17 @@
-declare parameter wantedApoapsisKm.
-declare parameter maxStage.
+////////////////////////////////////////////////////////////////////////////////
+// ascent
+//
+// It will raise apoapsis, staging til maxStage
+////////////////////////////////////////////////////////////////////////////////
+declare parameter wantedApoapsisKm. // wanted apoapsis, in km
+declare parameter maxStage. // max stage
 
 set wantedApoapsis to wantedApoapsisKm*1000.
 
+run once lib_utils.
+
 global launch_gt0 is 0.
 global launch_gt1 is 45000.
-
-////////////////////////////////////////////////////////////////////////////////
-// Auto-stage logic
-////////////////////////////////////////////////////////////////////////////////
-function ascentStaging {
-  if stage:number > maxStage {
-    if maxthrust = 0 {
-      detailMessage("Ascent", "no thrust, stage #" + stage:number).
-      stage.
-    }
-    SET numOut to 0.
-    LIST ENGINES IN engines.
-    FOR eng IN engines
-    {
-      IF eng:FLAMEOUT
-      {
-        SET numOut TO numOut + 1.
-      }
-    }
-    if numOut > 0 {
-      detailMessage("Ascent", "flameout, stage #" + stage:number).
-      stage.
-    }
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Auto-throttle logic
@@ -60,7 +42,7 @@ sas off.
 lock steering to ascentSteering().
 lock throttle to ascentThrottle().
 until apoapsis>wantedApoapsis{
-  ascentStaging().
+  burnStaging(maxStage).
   wait 0.2.
 }
 detailMessage("Ascent", "apoapsis ok, release throttle").
