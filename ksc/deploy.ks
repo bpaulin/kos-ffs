@@ -1,25 +1,6 @@
-declare parameter needNodes is true.
-declare parameter needActions is false.
-
-function warn {
-  parameter msg.
-  terminal:input:clear.
-  print msg + ", press key to launch anyway (and die)".
-  set ch to terminal:input:getchar().
-}
-
-if needNodes and not career:canmakenodes {
-  warn("this mission needs nodes").
-}
-
-if needActions and not career:candoactions {
-  warn("this mission needs actions").
-}
-
 global deployStatus is true.
 
 switch to archive.
-
 list files in scripts.
 for file in scripts {
   if file:name:endswith(".ks") and not file:name:startswith("test") {
@@ -40,7 +21,6 @@ for file in scripts {
     }
   }
 }
-
 switch to core:volume.
 
 if not deployStatus {

@@ -1,13 +1,7 @@
-CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
-wait 2.
 switch to archive.
-
-run once lib_message.
-run once lib_math.
-run once lib_io.
-run once lib_utils.
-
-set verbose to verboseDebug.
+// if ship:status = "prelaunch" {
+//   runpath("0:/ksc/deploy").
+// }
 
 local stageMaxAscent is 2.
 local stageMinCircularize is 4.
@@ -19,7 +13,7 @@ local nextStep is getNextStep().
 ////////////////////////////////////////////////////////////////////////////////
 // Prelaunch -> orbit
 ////////////////////////////////////////////////////////////////////////////////
-if nextstep="prelaunch" {
+if nextMissionStep="prelaunch" {
   missionMessage("Launch!").
   stage.
   wait 1.
@@ -30,7 +24,7 @@ if nextstep="prelaunch" {
   if (ship:status = "orbiting") {
     missionMessage("In orbit!").
     panels on.
-    setNextStep("done").
+    setNextMissionStep("done").
   }
   else {
     errorMessage("Failed").
@@ -41,7 +35,7 @@ if nextstep="prelaunch" {
 ////////////////////////////////////////////////////////////////////////////////
 // reboot
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep<>"done" {
+if nextMissionStep<>"done" {
   wait 5.
   reboot.
 }

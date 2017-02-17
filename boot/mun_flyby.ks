@@ -1,12 +1,8 @@
-CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
-wait 2.
-until not hasnode { remove nextnode. }.
-switch to archive.
-
-run once lib_message.
-run once lib_math.
-run once lib_io.
-run once lib_utils.
+// switch to archive.
+if ship:status = "prelaunch" {
+  runpath("0:/ksc/deploy").
+}
+run init.
 
 set verbose to verboseDebug.
 
@@ -25,12 +21,10 @@ local missionGoal is body("Mun").
 set steeringmanager:pitchts to 5.
 set steeringmanager:yawts to 5.
 
-local nextStep is getNextStep().
-
 ////////////////////////////////////////////////////////////////////////////////
 // Prelaunch -> orbit
 ////////////////////////////////////////////////////////////////////////////////
-if nextstep="prelaunch" {
+if nextMissionStep="prelaunch" {
   missionMessage("Launch!").
   stage.
   wait 1.
@@ -41,7 +35,7 @@ if nextstep="prelaunch" {
   if (ship:status = "orbiting") {
     missionMessage("In orbit!").
     panels on.
-    setNextStep("transfer").
+    setNextMissionStep("transfer").
   }
   else {
     errorMessage("Failed").
@@ -52,31 +46,31 @@ if nextstep="prelaunch" {
 ////////////////////////////////////////////////////////////////////////////////
 // orbit -> transfer
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep="transfer" {
+if nextMissionStep="transfer" {
   dropStageTo(stageMinTransfer).
   wait 1.
 
   missionMessage("Transfer to " + missionGoal:name).
   run exe_transfer(missionGoal).
 
-  setNextStep("encounter").
+  setNextMissionStep("encounter").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // transfer -> encounter
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep="encounter" {
+if nextMissionStep="encounter" {
   missionMessage("Waiting for " + missionGoal:name + " encounter").
   warpto(time:seconds + ship:orbit:nextpatcheta).
   wait until ship:body=missionGoal.
   wait 2.
-  setNextStep("escape").
+  setNextMissionStep("escape").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // encounter -> escape
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep="escape" {
+if nextMissionStep="escape" {
   missionMessage("Waiting for " + missionGoal:name + " escape").
   // warpto(time:seconds + eta:periapsis - 15).
   // wait eta:periapsis - 15.
@@ -86,13 +80,13 @@ if nextStep="escape" {
   warpto(time:seconds + ship:orbit:nextpatcheta).
   wait until ship:body=Kerbin.
   wait 2.
-  setNextStep("return").
+  setNextMissionStep("return").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // escape -> return
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep="return" {
+if nextMissionStep="return" {
   missionMessage("Decrease velocity").
   run exe_return(altitudeWanted,altitudeReEnter,stageDeltaV()).
 
@@ -100,14 +94,13 @@ if nextStep="return" {
   run exe_descent(stageMaxDescent, maxReenterWarp).
 
   missionMessage(ship:status).
-  set nextStep to "done".
-  setNextStep("done").
+  setNextMissionStep("done").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // reboot
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep<>"done" {
+if nextMissionStep<>"done" {
   wait 5.
   reboot.
 }

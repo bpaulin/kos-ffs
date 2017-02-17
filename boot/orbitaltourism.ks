@@ -1,12 +1,8 @@
-CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
-wait 2.
-until not hasnode { remove nextnode. }.
 switch to archive.
-
-run once lib_message.
-run once lib_math.
-run once lib_io.
-run once lib_utils.
+// if ship:status = "prelaunch" {
+//   runpath("0:/ksc/deploy").
+// }
+run init.
 
 local stageMaxAscent is 2.
 local stageMinCircularize is 2.
@@ -17,12 +13,10 @@ local altitudeReEnter is 25.
 
 local maxReenterWarp is 3.
 
-local nextStep is getNextStep().
-
 ////////////////////////////////////////////////////////////////////////////////
 // Prelaunch -> orbit
 ////////////////////////////////////////////////////////////////////////////////
-if nextstep="prelaunch" {
+if nextMissionStep="prelaunch" {
   missionMessage("Launch!").
   stage.
   wait 1.
@@ -33,33 +27,29 @@ if nextstep="prelaunch" {
   if (ship:status = "orbiting") {
     missionMessage("In orbit!").
     panels on.
-    setNextStep("descent").
+    setNextMissionStep("descent").
   }
   else {
     errorMessage("Failed").
     run exe_descent(stageMaxDescent,3).
-    setNextStep("done").
+    setNextMissionStep("done").
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Prelaunch -> orbit
+// orbit -> landing
 ////////////////////////////////////////////////////////////////////////////////
-if nextstep="descent" {
+if nextMissionStep="descent" {
   missionMessage("Re-enter").
   run exe_reenter(altitudeReEnter,stageMaxDescent,maxReenterWarp).
   missionMessage(ship:status).
-  setNextStep("done").
-}
-
-if (ship:status="landed" or ship:status="splashed") {
-  missionMessage("Landed").
+  setNextMissionStep("done").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // reboot
 ////////////////////////////////////////////////////////////////////////////////
-if nextStep<>"done" {
+if nextMissionStep<>"done" {
   wait 5.
   reboot.
 }

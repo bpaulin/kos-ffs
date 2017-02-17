@@ -1,11 +1,8 @@
-CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
-wait 2.
 switch to archive.
-
-run once lib_message.
-run once lib_math.
-run once lib_io.
-run once lib_utils.
+// if ship:status = "prelaunch" {
+//   runpath("0:/ksc/deploy").
+// }
+run init.
 
 local stageMaxAscent is 1.
 local stageMaxDescent is 0.
@@ -16,13 +13,13 @@ stage.
 wait 2.
 
 missionMessage("Ascent.").
-run ascent(altitudeWanted,stageMaxAscent).
+run exe_ascent(altitudeWanted,stageMaxAscent).
 
 missionMessage("Waiting for apoapsis.").
 wait until verticalspeed<0.
 missionMessage("Descent.").
 
-run descent(stageMaxDescent).
+run exe_descent(stageMaxDescent).
 missionMessage("Success!").
 
 sas on.
