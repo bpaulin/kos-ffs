@@ -2,13 +2,12 @@ switch to archive.
 // if ship:status = "prelaunch" {
 //   runpath("0:/ksc/deploy").
 // }
+run init.
 
-local stageMaxAscent is 2.
+local stageMaxAscent is 1.
 local stageMinCircularize is 4.
 local stageMaxDescent is 0.
-local altitudeWanted is 75.
-
-local nextStep is getNextStep().
+local altitudeWanted is 80.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Prelaunch -> orbit

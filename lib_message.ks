@@ -3,6 +3,17 @@ declare global verboseDetails is 1.
 declare global verboseDebug is 2.
 
 declare global verbose is verboseDetails.
+declare global allowPause is true.
+
+
+function pauseMessage {
+  if allowPause {
+    parameter msg.
+    terminal:input:clear.
+    print msg + " press key to go on (and die)".
+    set ch to terminal:input:getchar().
+  }
+}
 
 function errorMessage {
   parameter msg.

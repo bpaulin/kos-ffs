@@ -54,7 +54,7 @@ else {
   local original is nd:deltaV.
   local lastMag is 10000.
   detailMessage("Node", "end warp").
-  detailMessage("Node", "begin burn").
+  detailMessage("Node", "begin burn: " + round(nd:deltav:mag) + " m/s").
   until abs(nd:deltaV:mag)<0.1 or abs(nd:deltaV:mag)>abs(lastMag) {
     if nd:deltav:mag>0.1 {
       lock throttle to nd:deltav:mag/10.

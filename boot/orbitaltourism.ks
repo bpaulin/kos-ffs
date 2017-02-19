@@ -8,7 +8,7 @@ local stageMaxAscent is 2.
 local stageMinCircularize is 2.
 local stageMaxDescent is 0.
 
-local altitudeWanted is 75.
+local altitudeWanted is 80.
 local altitudeReEnter is 25.
 
 local maxReenterWarp is 3.
@@ -20,8 +20,6 @@ if nextMissionStep="prelaunch" {
   missionMessage("Launch!").
   stage.
   wait 1.
-
-  missionMessage("Orbiting").
   run exe_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
 
   if (ship:status = "orbiting") {

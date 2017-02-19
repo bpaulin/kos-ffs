@@ -14,8 +14,8 @@ set wantedPeriapsis to wantedPeriapsisKm*1000.
 ////////////////////////////////////////////////////////////////////////////////
 // Decrease Periapsis
 ////////////////////////////////////////////////////////////////////////////////
-detailMessage("Re-enter", "Decrease Periapsis to " + wantedPeriapsis).
 if periapsis>wantedPeriapsis {
+  detailMessage("Re-enter", "Decrease Periapsis to " + wantedPeriapsis).
   run node_peri(wantedPeriapsis).
   run exe_node.
 }

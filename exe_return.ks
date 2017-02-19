@@ -7,14 +7,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 parameter apoParking. // minimum apoapsis, in km
 parameter periEnter. // re enter periapsis, in km
-parameter availableDv. // available delatV to use, in m/s
+parameter availableDv is 0. // available delatV to use, in m/s
 
 run once lib_math.
 run once lib_message.
 
+if periapsis<(body:atm:height+10000) {
+  run node_peri_delay(80,30).
+  run exe_node.
+}
+
+if availableDv = 0 {
+  set availableDv to stageDeltaV().
+}
+
 local dv1 is 0.
 local dv2 is 0.
-
 ////////////////////////////////////////////////////////////////////////////////
 // Find min/max apoapsis we can reach.
 ////////////////////////////////////////////////////////////////////////////////

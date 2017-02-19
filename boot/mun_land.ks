@@ -6,17 +6,20 @@ run init.
 
 set verbose to verboseDebug.
 
-local stageMaxAscent is 2.
-local stageMinCircularize is 4.
-local stageMinTransfer is 2.
+local stageMaxAscent is 4.
+local stageMinCircularize is 6.
+local stageMinTransfer is 3.
+
+local altitudeWanted is 80.
+local altitudeReEnter is 30.
+
 local stageMaxDescent is 0.
-
-local altitudeWanted is 75.
-local altitudeReEnter is 45.
-
 local maxReenterWarp is 3.
 
 local missionGoal is body("Mun").
+
+set steeringmanager:pitchts to 10.
+set steeringmanager:yawts to 10.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Prelaunch -> orbit
@@ -27,7 +30,10 @@ if nextMissionStep="prelaunch" {
   wait 1.
 
   missionMessage("Orbiting").
-  run exe_orbit(altitudeWanted, stageMaxAscent, stageMinCircularize).
+  run exe_orbit(
+    80, // lko
+    6 // stop staging here
+  ).
 
   if (ship:status = "orbiting") {
     missionMessage("In orbit!").
@@ -35,8 +41,11 @@ if nextMissionStep="prelaunch" {
     setNextMissionStep("transfer").
   }
   else {
-    errorMessage("Failed").
-    run exe_descent(stageMaxDescent,3).
+    errorMessage("Failed, periapsis: "+periapsis).
+    run exe_descent(
+      0, // this stage will go down
+      3 // warp
+    ).
   }
 }
 
@@ -44,10 +53,12 @@ if nextMissionStep="prelaunch" {
 // orbit -> transfer
 ////////////////////////////////////////////////////////////////////////////////
 if nextMissionStep="transfer" {
-  dropStageTo(stageMinTransfer).
+  missionMessage("Transfer to " + missionGoal:name).
+  dropStageTo(
+    4 // stage for transfer
+  ).
   wait 1.
 
-  missionMessage("Transfer to " + missionGoal:name).
   run exe_transfer(missionGoal).
 
   setNextMissionStep("encounter").
@@ -61,34 +72,72 @@ if nextMissionStep="encounter" {
   warpto(time:seconds + ship:orbit:nextpatcheta).
   wait until ship:body=missionGoal.
   wait 2.
-  setNextMissionStep("escape").
+  setNextMissionStep("orbit").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// encounter -> escape
+// encounter -> orbit
 ////////////////////////////////////////////////////////////////////////////////
-if nextMissionStep="escape" {
-  missionMessage("Waiting for " + missionGoal:name + " escape").
-  // warpto(time:seconds + eta:periapsis - 15).
-  // wait eta:periapsis - 15.
-  // missionMessage("near mun, start again in 30s").
-  // wait 30.
-  // missionMessage("let's go back").
-  warpto(time:seconds + ship:orbit:nextpatcheta).
-  wait until ship:body=Kerbin.
-  wait 2.
+if nextMissionStep="orbit" {
+  missionMessage("Orbiting around " + missionGoal:name).
+  run exe_catch(
+    10 // orbit 10km above the mun.
+  ).
+  setNextMissionStep("land").
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// orbit -> land
+////////////////////////////////////////////////////////////////////////////////
+if nextMissionStep="land" {
+  dropStageTo(
+    2 // landing stage
+  ).
+  run exe_land.
+  setNextMissionStep("liftoff").
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// land -> liftoff
+////////////////////////////////////////////////////////////////////////////////
+if nextMissionStep="liftoff" {
+  pauseMessage("").
+  run exe_orbit(
+    10, // orbit 10km above the mun.
+    2 // don't stage
+  ).
   setNextMissionStep("return").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// escape -> return
+// liftoff -> return
 ////////////////////////////////////////////////////////////////////////////////
 if nextMissionStep="return" {
+  missionMessage("Return from " + missionGoal:name).
+  run node_return_from_moon.
+  run exe_node.
+
+  warpto(time:seconds + ship:orbit:nextpatcheta).
+  wait until ship:body=Kerbin.
+  wait 2.
+  setNextMissionStep("reenter").
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// return -> reenter
+////////////////////////////////////////////////////////////////////////////////
+if nextMissionStep="reenter" {
   missionMessage("Decrease velocity").
-  run exe_return(altitudeWanted,altitudeReEnter,stageDeltaV()).
+  run exe_return(
+    80, //min parking
+    35 // reenter altitude
+  ).
 
   missionMessage("Descent").
-  run exe_descent(stageMaxDescent, maxReenterWarp).
+  run exe_descent(
+    0, // landing stage
+    3 // warp
+  ).
 
   missionMessage(ship:status).
   setNextMissionStep("done").

@@ -9,14 +9,17 @@ set verbose to verboseDebug.
 local stageMaxAscent is 2.
 local stageMinCircularize is 4.
 local stageMinTransfer is 2.
+
+local altitudeWanted is 80.
+local altitudeReEnter is 30.
+
 local stageMaxDescent is 0.
-
-local altitudeWanted is 75.
-local altitudeReEnter is 45.
-
 local maxReenterWarp is 3.
 
 local missionGoal is body("Mun").
+
+set steeringmanager:pitchts to 10.
+set steeringmanager:yawts to 10.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Prelaunch -> orbit
@@ -35,7 +38,7 @@ if nextMissionStep="prelaunch" {
     setNextMissionStep("transfer").
   }
   else {
-    errorMessage("Failed").
+    errorMessage("Failed, periapsis: "+periapsis).
     run exe_descent(stageMaxDescent,3).
   }
 }
@@ -44,10 +47,11 @@ if nextMissionStep="prelaunch" {
 // orbit -> transfer
 ////////////////////////////////////////////////////////////////////////////////
 if nextMissionStep="transfer" {
+  missionMessage("Transfer to " + missionGoal:name).
+  // stopMessage("").
   dropStageTo(stageMinTransfer).
   wait 1.
 
-  missionMessage("Transfer to " + missionGoal:name).
   run exe_transfer(missionGoal).
 
   setNextMissionStep("encounter").
@@ -61,29 +65,42 @@ if nextMissionStep="encounter" {
   warpto(time:seconds + ship:orbit:nextpatcheta).
   wait until ship:body=missionGoal.
   wait 2.
-  setNextMissionStep("escape").
+  setNextMissionStep("orbit").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// encounter -> escape
+// encounter -> orbit
 ////////////////////////////////////////////////////////////////////////////////
-if nextMissionStep="escape" {
-  missionMessage("Waiting for " + missionGoal:name + " escape").
-  // warpto(time:seconds + eta:periapsis - 15).
-  // wait eta:periapsis - 15.
-  // missionMessage("near mun, start again in 30s").
-  // wait 30.
-  // missionMessage("let's go back").
-  warpto(time:seconds + ship:orbit:nextpatcheta).
-  wait until ship:body=Kerbin.
-  wait 2.
+if nextMissionStep="orbit" {
+  missionMessage("Orbiting around " + missionGoal:name).
+  run node_circularize.
+  run exe_node.
+  // run node_peri(25000).
+  // run exe_node.
+  // run node_circularize.
+  // run exe_node.
   setNextMissionStep("return").
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// escape -> return
+// orbit -> return
 ////////////////////////////////////////////////////////////////////////////////
 if nextMissionStep="return" {
+  missionMessage("Return from " + missionGoal:name).
+  // stopMessage("").
+  run node_return_from_moon.
+  run exe_node.
+
+  warpto(time:seconds + ship:orbit:nextpatcheta).
+  wait until ship:body=Kerbin.
+  wait 2.
+  setNextMissionStep("reenter").
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// return -> reenter
+////////////////////////////////////////////////////////////////////////////////
+if nextMissionStep="reenter" {
   missionMessage("Decrease velocity").
   run exe_return(altitudeWanted,altitudeReEnter,stageDeltaV()).
 

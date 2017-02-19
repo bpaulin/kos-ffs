@@ -1,4 +1,5 @@
 run once lib_math.
+run once lib_message.
 
 function dropStageTo {
   declare parameter maxStage.
@@ -6,7 +7,9 @@ function dropStageTo {
   until stage:number=maxStage {
     debugMessage(stageDeltaV() + " m/s left in stage #" + stage:number).
     stage.
-    wait 1.
+    until stage:ready {
+      wait 0.
+    }
   }
 }
 
