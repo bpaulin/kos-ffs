@@ -5,7 +5,30 @@
 
 {
   function mission_runner {
-    parameter sequence is list(), events is lex(), mission_data is lex().
+    parameter missions is list(), mission_data is lex().
+
+    local sequence is list().
+    local events is lex().
+    local dependency is uniqueSet().
+
+    for mission in missions {
+      for lib in mission["dependency"] {
+        dependency:add(lib).
+      }
+      for seq in mission["sequence"]
+        sequence:add(seq).
+      if mission["events"]:length > 0
+        for evt in mission["events"]:keys
+          events:add(evt, mission["events"][evt]).
+    }
+    for file in dependency {
+      download(file, file).
+      runpath("1:" + file).
+    }
+
+    sequence:add("mission_complete").
+    sequence:add({ parameter mission. hudtext("Mission script completed.", 5, 2, 25, white, true). mission["terminate"](). }).
+
     local data is lex().
     output("starting mission runner").
     local runmode is 0. local done is 0.

@@ -46,6 +46,16 @@ clearscreen.
     return true.
   }.
 
+  global downloadForMission is {
+    parameter missionfiles.
+    missionfiles:add("runner", "libs/mission_runner.ks").
+
+    for file in missionfiles:values {
+      download(file, file).
+      runpath("1:" + file).
+    }
+  }.
+
   // for logging data, with various considerations
   global output is {
     parameter text.
