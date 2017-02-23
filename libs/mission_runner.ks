@@ -27,7 +27,7 @@
     }
 
     sequence:add("mission_complete").
-    sequence:add({ parameter mission. hudtext("Mission script completed.", 5, 2, 25, white, true). mission["terminate"](). }).
+    sequence:add({ parameter mission. mission["terminate"](). }).
 
     local data is lex().
     output("starting mission runner").
