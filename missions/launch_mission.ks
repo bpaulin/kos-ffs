@@ -37,7 +37,10 @@
 
   function preflight {
     parameter mission.
-    if ship:status <> "PRELAUNCH" mission["switch_to"]("end_launch").
+    if ship:status <> "PRELAUNCH" {
+      mission["switch_to"]("end_launch").
+      return true.
+    }
     set ship:control:pilotmainthrottle to 0.
     output("Launch parameters: " + curr_mission["target_heading"] + ":" + curr_mission["target_altitude"] + ":" + curr_mission["final_altitude"], true).
     if launcher["launch"](curr_mission["target_heading"], curr_mission["target_altitude"], curr_mission["final_altitude"]) {

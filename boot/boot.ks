@@ -112,7 +112,7 @@ clearscreen.
 
       // check for new operations
       // destroy the log if needed to make room, but only if it'll make room
-      if download("operations/" + sName + ".ks", "operations.ks", false) print "new operations file received".
+      if download("operations/" + sName + ".ks", "operations.ks", true) print "new operations file received".
     }
 
 
@@ -160,7 +160,7 @@ clearscreen.
     RUNPATH("1:operations.ks").
     if deleteOnFinish deletepath("1:operations.ks").
     output("operations execution complete", true).
-    wait 2.
+    wait 15.
     reboot.
   }.
 
