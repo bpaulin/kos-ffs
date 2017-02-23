@@ -1,3 +1,4 @@
 test*.ks
 **/*.ksm
 aaa_*
+*.log.np2
