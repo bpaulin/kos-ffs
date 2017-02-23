@@ -104,7 +104,7 @@ clearscreen.
 
       // check for a new bootscript
       // destroy the log if needed to make room, but only if it'll make room
-      if download(sName + ".boot.ks", "boot.ks", false) {
+      if download(sName + ".boot.ks", "boot.ks", true) {
         print "new boot file received".
         wait 2.
         reboot.

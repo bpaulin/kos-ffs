@@ -18,7 +18,7 @@
   missions:add(launch_mission(80000, 90)).
 
   local dependency is uniqueSet(
-    "mission_runner.ks"
+    "libs/mission_runner.ks"
   ).
   local mission_sequence is list().
   local mission_events is lex().
