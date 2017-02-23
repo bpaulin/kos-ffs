@@ -4,8 +4,8 @@ switch to archive.
 // }
 run init.
 
-local stageMaxAscent is 1.
-local stageMinCircularize is 4.
+local stageMaxAscent is 2.
+local stageMinCircularize is 2.
 local stageMaxDescent is 0.
 local altitudeWanted is 80.
 

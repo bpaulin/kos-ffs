@@ -72,5 +72,7 @@ add nodeInc.
 
 // up or down?
 if abs(nodeInc:orbit:inclination - TgtInc:orbit:inclination)>abs(orbit:inclination - TgtInc:orbit:inclination) {
-  set nodeinc:normal to -dv.
+  remove nodeInc.
+  local nodeInc is node(time:seconds+time_to_node,0,-dv,0).
+  add nodeInc.
 }
