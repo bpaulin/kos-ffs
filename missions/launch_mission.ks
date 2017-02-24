@@ -16,7 +16,8 @@
       "circularize", circularize@,
       "transfer", transfer@,
       "final_circ", circularize@,
-      "end_launch", end_launch@
+      "end_launch", end_launch@,
+      "idle", idle@
     ),
     "events", lex(),
     "dependency", list(
@@ -37,6 +38,7 @@
 
   function preflight {
     parameter mission.
+
     if ship:status <> "PRELAUNCH" {
       mission["switch_to"]("end_launch").
       return true.
@@ -50,16 +52,11 @@
       output("Unable to launch, mission terminated.", true).
       mission["terminate"]().
     }
-
-  }
-
-  function end_launch {
-    parameter mission.
-    mission["next"]().
   }
 
   function launch {
     parameter mission.
+
     if launcher["countdown"]() <= 0 {
       mission["add_event"]("staging", event_lib["staging"]).
       mission["next"]().
@@ -68,13 +65,21 @@
 
   function ascent {
     parameter mission.
+
     if launcher["ascent_complete"]() {
         mission["next"]().
       }
   }
 
+  function enable_antennae {
+    parameter mission.
+
+    mission["next"]().
+  }
+
   function circularize {
     parameter mission.
+
     if curr_mission:haskey("circ") {
       if launcher["circularized"]() {
         curr_mission:remove("circ").
@@ -88,14 +93,19 @@
 
   function transfer {
     parameter mission.
+
     if launcher["transfer_complete"]()
       mission["next"]().
   }
 
-  function enable_antennae {
+  function end_launch {
     parameter mission.
 
     mission["next"]().
+  }
+
+  function idle {
+    parameter mission.
   }
 
 }

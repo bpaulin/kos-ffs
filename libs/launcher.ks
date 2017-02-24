@@ -108,6 +108,20 @@
     return false.
   }
 
+  function circularize {
+    lock throttle to circ_thrott().
+    lock steering to heading(compass_of_vel(), -(eta_ap_with_neg()/3)).
+	}
+
+	function circularized {
+    if (ship:obt:trueanomaly < 90 or ship:obt:trueanomaly > 270) {
+      unlock steering.
+      unlock throttle.
+      return true.
+    }
+    return false.
+  }
+
   function east_for {
     parameter ves.
 
@@ -139,11 +153,6 @@
     }
   }
 
-  function circularize {
-    lock throttle to circ_thrott().
-    lock steering to heading(compass_of_vel(), -(eta_ap_with_neg()/3)).
-	}
-
 	function circ_thrott {
 		if abs(steeringmanager:yawerror) < 2 and
 			 abs(steeringmanager:pitcherror) < 2 and
@@ -153,15 +162,6 @@
 			return 0.
 		}
 	}
-
-	function circularized {
-    if (ship:obt:trueanomaly < 90 or ship:obt:trueanomaly > 270) {
-      unlock steering.
-      unlock throttle.
-      return true.
-    }
-    return false.
-  }
 
   // export(launcher).
 }
