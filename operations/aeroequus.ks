@@ -6,10 +6,10 @@
 
 {
   downloadForMission(lex(
-    "launch", "Missions/launch_mission.ks"
+    "ascent", "Missions/ascent.ks"
   )).
 
   run_mission(list(
-    launch_mission(80000, 90)
+    ascent_mission(80000, 90)
   )).
 }

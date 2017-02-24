@@ -170,7 +170,7 @@ clearscreen.
     RUNPATH("1:operations.ks").
     if deleteOnFinish deletepath("1:operations.ks").
     output("operations execution complete", true).
-    wait 15.
+    wait 1.
     reboot.
   }.
 
