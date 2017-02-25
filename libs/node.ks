@@ -5,7 +5,7 @@
   ).
 
   function node_exec {
-    parameter autowarp is false.
+    parameter autowarp is true.
 
     if not hasnode return.
 
@@ -19,6 +19,9 @@
     local burn_duration is node_time(nd).
     local start_time is time:seconds + nd:eta - burn_duration/2.
     output("eta:" + round(nd:eta) + ", dV: " + round(nd:deltav:mag,2) + ", dT: " + round(burn_duration), true).
+
+    if autowarp { warpto(start_time - 30). }
+
     wait until time:seconds >= start_time.
     local lastMag is 10000.
     local v is nd:burnvector.

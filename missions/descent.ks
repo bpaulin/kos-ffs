@@ -20,6 +20,10 @@
 
     lock steering to retrograde.
 
+    if not chutessafe {
+      unlock steering.
+    }
+
     if ship:status="landed" or ship:status="splashed" {
       mission["next"]().
     }

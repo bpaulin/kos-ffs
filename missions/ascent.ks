@@ -53,7 +53,8 @@
   function turn {
     parameter mission.
 
-    lock steering to heading(curr_mission["target_heading"],90-90*(altitude/body:atm:height * 0.85)^(0.75)).
+        lock steering to heading(curr_mission["target_heading"],90-sqrt((90^2)*(altitude)/body:atm:height)).
+    // lock steering to heading(curr_mission["target_heading"],90-90*(altitude/body:atm:height * 0.85)^(0.75)).
 
     if apoapsis>=curr_mission["target_altitude"] {
       mission["next"]().
@@ -63,9 +64,15 @@
   function coasting {
     parameter mission.
 
-    lock throttle to 0.
-    lock steering to heading(curr_mission["target_heading"],0).
     mission["remove_event"]("staging").
+    // lock steering to heading(curr_mission["target_heading"],0).
+
+    if apoapsis>=curr_mission["target_altitude"] {
+      lock throttle to 0.
+    }
+    else {
+      lock throttle to 0.5.
+    }
 
     if altitude>=body:atm:height {
       mission["next"]().
@@ -74,6 +81,9 @@
 
   function end_ascent {
     parameter mission.
+
+    lock throttle to 0.
+    unlock steering.
 
     mission["next"]().
   }
