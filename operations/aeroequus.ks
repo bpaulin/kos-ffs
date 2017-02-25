@@ -6,10 +6,14 @@
 
 {
   downloadForMission(lex(
-    "ascent", "Missions/ascent.ks"
+    "ascent", "Missions/ascent.ks",
+    "dropStage", "Missions/dropStage.ks",
+    "circularize", "Missions/circularize.ks"
   )).
 
   run_mission(list(
-    ascent_mission(80000, 90)
+    ascent_mission(80000, 90),
+    dropStage_mission(2),
+    circularize_mission()
   )).
 }

@@ -7,6 +7,7 @@
       "launch", launch@,
       "vertical", vertical@,
       "turn", turn@,
+      "coasting", coasting@,
       "end_ascent", end_ascent@
     ),
     "events", lex(),
@@ -16,7 +17,7 @@
   ).
 
   global ascent_mission is {
-    parameter TARGET_ALTITUDE is 80000.
+    parameter TARGET_ALTITUDE is body:atm:height+10000.
     parameter TARGET_HEADING is 90.
     set curr_mission["target_altitude"] to TARGET_ALTITUDE.
     set curr_mission["target_heading"] to TARGET_HEADING.
@@ -26,7 +27,8 @@
   function launch {
     parameter mission.
 
-    if ship:status <> "PRELAUNCH" {
+    wait 2.
+    if ship:status <> "PRELAUNCH" and ship:status <> "LANDED" {
       mission["switch_to"]("end_ascent").
       return true.
     }
@@ -56,6 +58,19 @@
     lock steering to heading(curr_mission["target_heading"],90-90*(altitude/body:atm:height * 0.85)^(0.75)).
 
     if apoapsis>=curr_mission["target_altitude"] {
+      output("coasting", true).
+      mission["next"]().
+    }
+  }
+
+  function coasting {
+    parameter mission.
+
+    lock throttle to 0.
+    lock steering to heading(curr_mission["target_heading"],0).
+    mission["remove_event"]("staging").
+
+    if altitude>=body:atm:height {
       output("end ascent", true).
       mission["next"]().
     }
@@ -64,10 +79,6 @@
   function end_ascent {
     parameter mission.
 
-    lock throttle to 0.
-    lock steering to heading(curr_mission["target_heading"],0).
-
-    mission["remove_event"]("staging").
     mission["next"]().
   }
 }

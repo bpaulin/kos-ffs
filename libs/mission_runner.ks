@@ -5,7 +5,7 @@
 
 {
   function mission_runner {
-    parameter missions is list(), mission_data is lex().
+    parameter missions is list(), terminate is false, mission_data is lex().
 
     local sequence is list().
     local events is lex().
@@ -27,7 +27,17 @@
     }
 
     sequence:add("mission_complete").
-    sequence:add({ parameter mission. mission["terminate"](). }).
+    if terminate {
+      sequence:add({
+        parameter mission.
+        mission["terminate"]().
+      }).
+    }
+    else {
+      sequence:add({
+        parameter mission.
+      }).
+    }
 
     local data is lex().
     output("starting mission runner").
