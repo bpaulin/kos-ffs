@@ -5,7 +5,7 @@
   local curr_mission is lex(
     "sequence", list(
       "circularize", circularize@,
-      "exec_node", exec_node@,
+      "exec_circularize", exec_circularize@,
       "end_circularize", end_circularize@
     ),
     "events", lex(),
@@ -25,7 +25,6 @@
     if orbit:eccentricity>0.001 {
       add navigate_lib["circularize"]().
       wait 1.
-      output("exec_node", true).
       mission["next"]().
     }
     else {
@@ -33,12 +32,11 @@
     }
   }
 
-  function exec_node {
+  function exec_circularize {
     parameter mission.
 
     node_lib["exec"]().
 
-    output("end_circularize", true).
     mission["next"]().
   }
 

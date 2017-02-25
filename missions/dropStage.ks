@@ -11,19 +11,19 @@
   ).
 
   global dropStage_mission is {
-    parameter MAXSTAGE.
-
-    set curr_mission["maxstage"] to MAXSTAGE.
-
     return curr_mission.
   }.
 
   function dropStage {
     parameter mission.
 
-    if stage:number>curr_mission["maxstage"] {
-      output("droping stage", true).
-      until stage:number=curr_mission["maxstage"] {
+    local params is mission["get_data"]("dropStage").
+    local maxStage is params[0].
+    params:remove(0).
+    mission["add_data"]("dropStage", params).
+
+    if stage:number>maxStage {
+      until stage:number=maxStage {
         stage.
         until stage:ready {
           wait 0.

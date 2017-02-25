@@ -42,6 +42,7 @@
     local data is lex().
     output("starting mission runner").
     local runmode is 0. local done is 0.
+    local displayRunmode is true.
 
     // This object gets passed to sequences and events, to allow them to
     // interact with the event loop.
@@ -67,6 +68,10 @@
 
     // Main event loop
     until done or runmode * 2 >= sequence:length {
+      if displayRunmode {
+        output("Sequence: "+sequence[runmode * 2], true).
+        set displayRunmode to false.
+      }
       sequence[runmode * 2 + 1](mission).
       for event in events:keys events[event](mission).
       wait 0.01.
@@ -76,6 +81,7 @@
 
     // Update runmode, persisting to disk
     function update_runmode {
+      set displayRunmode to true.
       parameter n.
       save_state().
       if not core:volume:exists("mission.runmode")

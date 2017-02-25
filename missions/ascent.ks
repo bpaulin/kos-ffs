@@ -39,7 +39,6 @@
     lock steering to heading(curr_mission["target_heading"],90).
 
     mission["add_event"]("staging", event_lib["staging"]).
-    output("vertical ascent", true).
     mission["next"]().
   }
 
@@ -47,7 +46,6 @@
     parameter mission.
 
     if verticalSpeed>=75 {
-      output("gravity turn", true).
       mission["next"]().
     }
   }
@@ -58,7 +56,6 @@
     lock steering to heading(curr_mission["target_heading"],90-90*(altitude/body:atm:height * 0.85)^(0.75)).
 
     if apoapsis>=curr_mission["target_altitude"] {
-      output("coasting", true).
       mission["next"]().
     }
   }
@@ -71,7 +68,6 @@
     mission["remove_event"]("staging").
 
     if altitude>=body:atm:height {
-      output("end ascent", true).
       mission["next"]().
     }
   }

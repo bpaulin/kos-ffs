@@ -10,6 +10,7 @@
     if not hasnode return.
 
     local nd is nextnode.
+    local v is nd:burnvector.
 
     sas off.
     lock steering to nd:burnvector.
@@ -20,8 +21,9 @@
     output("eta:" + round(nd:eta) + ", dV: " + round(nd:deltav:mag,2) + ", dT: " + round(burn_duration), true).
     wait until time:seconds >= start_time.
     local lastMag is 10000.
+    local v is nd:burnvector.
     output("begin burn: " + round(nd:deltav:mag,2) + " m/s", true).
-    until abs(nd:deltaV:mag)<0.1 or abs(nd:deltaV:mag)>(abs(lastMag)+0.1) {
+    until abs(nd:deltaV:mag)<0.1 or abs(nd:deltaV:mag)>(abs(lastMag)+0.1) or (vdot(nd:burnvector, v) < 0) {
       if nd:deltav:mag>0.1 {
         lock throttle to nd:deltav:mag/10.
       }
