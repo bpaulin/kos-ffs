@@ -45,6 +45,9 @@
   function vertical {
     parameter mission.
 
+    set steeringmanager:pitchts to 12.
+    set steeringmanager:yawts to 12.
+
     if verticalSpeed>=75 {
       mission["next"]().
     }
@@ -65,7 +68,6 @@
     parameter mission.
 
     mission["remove_event"]("staging").
-    // lock steering to heading(curr_mission["target_heading"],0).
 
     if apoapsis>=curr_mission["target_altitude"] {
       lock throttle to 0.
@@ -82,8 +84,10 @@
   function end_ascent {
     parameter mission.
 
+    steeringmanager:resetpids().
     lock throttle to 0.
     unlock steering.
+    panels on.
 
     mission["next"]().
   }

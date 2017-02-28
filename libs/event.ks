@@ -19,7 +19,7 @@
         // Since an engine has flamed out, there's an implicit assumption that the engine list will change
         event_lib:remove("englist").
       stage.
-      steeringmanager:resetpids().
+      // steeringmanager:resetpids().
     }
   }
 

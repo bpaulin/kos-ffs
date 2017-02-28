@@ -18,11 +18,10 @@
   function descent {
     parameter mission.
 
+    sas off.
+    set STEERINGMANAGER:PITCHPID:KD to 5.
+    set STEERINGMANAGER:YAWPID:KD to 5.
     lock steering to retrograde.
-
-    if not chutessafe {
-      unlock steering.
-    }
 
     if ship:status="landed" or ship:status="splashed" {
       mission["next"]().
