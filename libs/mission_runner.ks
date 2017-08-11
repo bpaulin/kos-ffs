@@ -1,31 +1,37 @@
-// Mission Runner v0.2.0
-// Kevin Gisi
-// Kenneth Cummins
-// http://youtube.com/gisikw
+// mission runner
 
 {
   function mission_runner {
-    parameter missions is list(), terminate is false, mission_data is lex().
+    parameter missions is list(). // missions
+    parameter terminate is false. // add done at the end
+    parameter mission_data is lex(). // mission data
 
     local sequence is list().
     local events is lex().
     local dependency is uniqueSet().
 
+    // walk across missions
     for mission in missions {
+      // libs
       for lib in mission["dependency"] {
         dependency:add(lib).
       }
+      // sequences
       for seq in mission["sequence"]
         sequence:add(seq).
+      // events
       if mission["events"]:length > 0
         for evt in mission["events"]:keys
           events:add(evt, mission["events"][evt]).
     }
+
+    // download and run libs
     for file in dependency {
       download(file, file).
       runpath("1:" + file).
     }
 
+    // even missions needs closure
     sequence:add("mission_complete").
     if terminate {
       sequence:add({
@@ -41,7 +47,8 @@
 
     local data is lex().
     output("starting mission runner").
-    local runmode is 0. local done is 0.
+    local runmode is 0.
+    local done is 0.
     local displayRunmode is true.
 
     // This object gets passed to sequences and events, to allow them to
